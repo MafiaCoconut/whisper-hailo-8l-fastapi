@@ -10,6 +10,8 @@ PIP_BIN = os.path.join(VENV_DIR, "bin", "pip")
 APP_DIR = os.path.join(ROOT_DIR, "app")
 
 def run_command(command, cwd=None):
+    print(f"swd: {ROOT_DIR}")
+    print(f'cwd: {cwd}')
     """Helper function to run shell commands."""
     subprocess.run(command, shell=True, cwd=cwd, check=True)
 
@@ -43,7 +45,7 @@ def create_venv():
 
 def download_resources():
     try:
-        run_command(f"./download_resources.sh", cwd=APP_DIR)
+        run_command(f"./download_resources.sh", cwd=ROOT_DIR)
         print("Downloading inference files.")
     except subprocess.CalledProcessError:
         print("Inference files download failed.")
