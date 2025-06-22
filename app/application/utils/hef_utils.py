@@ -13,6 +13,7 @@ class HefUtils:
             str: Path to the encoder HEF file.
         """
         base_path = os.path.dirname(os.path.abspath(__file__))
+        print(base_path)
         if hw_arch == "hailo8l":
             hef_path = os.path.join(base_path, 'hefs', 'h8l', 'tiny', 'tiny-whisper-encoder-10s_15dB_h8l.hef')
         else:
@@ -34,6 +35,7 @@ class HefUtils:
             str: Path to the decoder HEF file.
         """
         base_path = os.path.dirname(os.path.abspath(__file__))
+        print(base_path)
         if hw_arch == "hailo8l":
             hef_path = os.path.join(base_path, "hefs", "h8l", "tiny",
                                     "tiny-whisper-decoder-fixed-sequence-matmul-split_h8l.hef")
