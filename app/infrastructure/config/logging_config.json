@@ -1,0 +1,59 @@
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {
+    "color": {
+      "()": "colorlog.ColoredFormatter",
+      "format": "%(log_color)s%(asctime)s | %(levelname)-8s | %(name)-40s | %(message)s",
+      "datefmt": "%d.%m.%Y-%H:%M",
+      "log_colors": {
+        "DEBUG": "cyan",
+        "INFO": "green",
+        "WARNING": "yellow",
+        "ERROR": "red",
+        "CRITICAL": "bold_red"
+      }
+    },
+    "default": {
+      "format": "%(asctime)s | %(levelname)-8s | %(name)-40s | %(message)s",
+      "datefmt": "%d.%m.%Y-%H:%M"
+    }
+  },
+  "handlers": {
+    "console": {
+      "class": "logging.StreamHandler",
+      "formatter": "color",
+      "level": "DEBUG",
+      "stream": "ext://sys.stdout"
+    },
+    "system_file": {
+      "class": "logging.FileHandler",
+      "formatter": "default",
+      "filename": "logs/system_data.log",
+      "mode": "a",
+      "level": "INFO"
+    }
+
+  },
+  "loggers": {
+    "uvicorn": {
+      "handlers": ["system_file", "console"],
+      "level": "DEBUG",
+      "propagate": false
+    },
+    "uvicorn.error": {
+      "handlers": ["system_file", "console"],
+      "level": "DEBUG",
+      "propagate": false
+    },
+    "uvicorn.access": {
+      "handlers": ["system_file", "console"],
+      "level": "DEBUG",
+      "propagate": false
+    }
+  },
+  "root": {
+    "handlers": ["console"],
+    "level": "INFO"
+  }
+}
