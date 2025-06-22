@@ -3,10 +3,10 @@ from infrastructure.config.utils_config import hef_utils, args_utils
 
 whisper_hailo = None
 def config():
-    args = args_utils.get_args()
-
-    encoder_path = hef_utils.get_encoder_hef_path(args.hw_arch)
-    decoder_path = hef_utils.get_decoder_hef_path(args.hw_arch)
+    # args = args_utils.get_args()
+    variant = "hailo8l"
+    encoder_path = hef_utils.get_encoder_hef_path(variant)
+    decoder_path = hef_utils.get_decoder_hef_path(variant)
 
 
     global whisper_hailo
@@ -14,7 +14,7 @@ def config():
         encoder_model_path=encoder_path,
         decoder_model_path=decoder_path,
         variant='tiny',
-        multi_process_service=args.multi_process_service)
+        multi_process_service=False)
 
 def whisper_hailo_stop():
     whisper_hailo.stop()

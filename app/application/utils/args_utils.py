@@ -18,7 +18,7 @@ class ArgsUtils:
         parser.add_argument(
             "--hw-arch",
             type=str,
-            default="hailo8",
+            default="hailo8l",
             choices=["hailo8", "hailo8l"],
             help="Hardware architecture to use (default: hailo8)"
         )
