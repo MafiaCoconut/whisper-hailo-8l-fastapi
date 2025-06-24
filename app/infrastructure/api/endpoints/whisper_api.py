@@ -27,16 +27,9 @@ async def transcribe_audio(
         content = await file.read()
         tmp.write(content)
         tmp_path = tmp.name
-    # try:
-    await whisper_service.transcribe_audio(audio_file_path=tmp_path)
-    # except Exception as e:
-    #     system_logger.error(f"Error during transcription: {e}")
-    #     response.status_code = 500
-    #     return {"error": "Failed to transcribe audio"}
-        
-    return {"message": "OK"}
+    result = await whisper_service.transcribe_audio(audio_file_path=tmp_path)
 
-
+    return {"message": result}
 
 @router.get("/transcribe")
 async def transcribe_audio(
