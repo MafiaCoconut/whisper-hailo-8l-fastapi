@@ -24,7 +24,7 @@ class TranscribeAudioUseCase:
         self.whisper_hailo = whisper_hailo
 
 
-    async def execute(self, audio_path: str):
+    async def execute(self, audio_path: str) -> str:
         sampled_audio = self.audio_utils.load_audio(audio_path)
 
         sampled_audio, start_time = improve_input_audio(sampled_audio, vad=True)
@@ -39,29 +39,11 @@ class TranscribeAudioUseCase:
             chunk_offset=chunk_offset
         )
 
+        result = ""
         for mel in mel_spectrograms:
-            # expected = self.whisper_hailo.encoder.input_layer.size  
-            actual = mel.nbytes
-            system_logger.debug(f"buffer size: actual={actual}")
-            # mel = mel.astype(np.float32, copy=False)  # на случай float64
-            # print("mel shape:", mel.shape, "dtype:", mel.dtype)
-            # print("C_CONTIGUOUS:", mel.flags['C_CONTIGUOUS'], "shape:", mel.shape)
-            # mel = mel.squeeze()
-            # mel = mel.reshape(1, *mel.shape)    
-            # mel = mel.transpose(0, 2, 1)             # (1, 80, 1000)
-            # mel = mel.reshape(1, 1, 1000, 80)        # (NHWC)
-            try:
-                self.whisper_hailo.send_data(mel)
-            except Exception as e:
-                print(f"[ERROR] Failed to send data: {e}")
-                return 
+            self.whisper_hailo.send_data(mel)
             time.sleep(0.2)
-            transcription = clean_transcription(self.whisper_hailo.get_transcription())
-            print(f"\n{transcription}")
+            result += clean_transcription(self.whisper_hailo.get_transcription())
             break
 
-        return True
-
-        # if args.reuse_audio:
-        #     break  # Exit the loop if reusing audio
-
+        return result
