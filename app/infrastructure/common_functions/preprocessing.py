@@ -2,6 +2,7 @@
 
 # import common.audio_utils
 from infrastructure.config.utils_config import audio_utils
+from application.utils.audio_utils import SAMPLE_RATE
 import numpy as np
 import logging
 
@@ -18,7 +19,7 @@ def preprocess(audio, is_nhwc=False, chunk_length=10, chunk_offset=0, max_durati
     - overlap: Overlap between chunks. This is useful for continuous audio processing. Add some overlap (e.g. 0.2) when processing an audio longer than 10 seonds.
     """
     # Limit the audio duration
-    sample_rate = audio_utils.SAMPLE_RATE
+    sample_rate = SAMPLE_RATE
     max_samples = max_duration * sample_rate
     offset = int(chunk_offset * sample_rate)
 
@@ -86,7 +87,7 @@ def improve_input_audio(audio, vad=True, low_audio_gain=True):
 
     start_time = 0
     if vad:
-        start_time = detect_first_speech(audio, audio_utils.SAMPLE_RATE, threshold=0.2, frame_duration=0.2)
+        start_time = detect_first_speech(audio, SAMPLE_RATE, threshold=0.2, frame_duration=0.2)
         if start_time is not None:
             logging.info(f"Speech detected at {start_time:.2f} seconds.")
         else:

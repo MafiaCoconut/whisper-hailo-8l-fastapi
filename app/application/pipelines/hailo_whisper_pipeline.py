@@ -1,6 +1,7 @@
 import numpy as np
+import logging
 import os
-# from hailo_platform import (HEF, VDevice, HailoSchedulingAlgorithm, FormatType)
+from hailo_platform import (HEF, VDevice, HailoSchedulingAlgorithm, FormatType)
 from transformers import AutoTokenizer
 from queue import Queue, Empty
 from threading import Thread
@@ -9,6 +10,7 @@ from infrastructure.common_functions.postprocessing import apply_repetition_pena
 
 
 # from common.postprocessing import apply_repetition_penalty
+system_logger = logging.getLogger(__name__)
 
 
 class HailoWhisperPipeline:
@@ -51,18 +53,24 @@ class HailoWhisperPipeline:
         """
         Load token embedding weights.
         """
-        base_path = os.path.dirname(os.path.abspath(__file__))
+        # base_path = os.path.dirname(os.path.abspath(__file__), os.pardir, os.pardir)
+        base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
         file_path = os.path.join(base_path,
-                                 f"decoder_assets/{self.variant}/decoder_tokenization/token_embedding_weight_{self.variant}.npy")
+                                 f"infrastructure/decoder_assets/{self.variant}/decoder_tokenization/token_embedding_weight_{self.variant}.npy")
+        
+        print(f"decoder_tokenization/token_embedding_weight_path: {file_path}")
         return np.load(file_path)
+        
 
     def _load_onnx_add_input(self):
         """
         Load ONNX add input.
         """
-        base_path = os.path.dirname(os.path.abspath(__file__))
+        base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
         file_path = os.path.join(base_path,
-                                 f"decoder_assets/{self.variant}/decoder_tokenization/onnx_add_input_{self.variant}.npy")
+                                 f"infrastructure/decoder_assets/{self.variant}/decoder_tokenization/onnx_add_input_{self.variant}.npy")
+        print(f"decoder_tokenization/onnx_add_input_path: {file_path}")
+
         return np.load(file_path)
 
     def _load_tokenizer(self):
@@ -128,14 +136,53 @@ class HailoWhisperPipeline:
                             input_mel = self.data_queue.get(timeout=1)
 
                             transcriptions = []
+                            # input_mel = np.ascontiguousarray(input_mel)
+                            system_logger.info(f" BEFORE actual_shape: {input_mel.shape}, actual_bytes: {input_mel.nbytes}")
+                            # input_mel = np.squeeze(input_mel, axis=1)
                             input_mel = np.ascontiguousarray(input_mel)
+                            system_logger.info(f" AFTER actual_shape: {input_mel.shape}, actual_bytes: {input_mel.nbytes}")
+
+                            expected_shape = encoder_infer_model.input().shape  # должно быть (1,80,1,1000) или (1,1,1000,80)
+                            expected_bytes = np.prod(expected_shape) * 4
+                            system_logger.info(f" expected_shape: {expected_shape}, expected_bytes: {expected_bytes}")
+
+                            # # input_mel = np.ascontiguousarray(input_mel)
+                            # # assert input_mel.dtype == np.float32
+                            # # expected_shape = tuple(encoder_infer_model.input().shape)
+                            # encoder_bindings.input().set_buffer(input_mel)
+                            # # expected_shape = encoder_infer_model.input().shape
+                            # expected_shape = encoder_infer_model.input().shape  # должно быть (1,80,1,1000) или (1,1,1000,80)
+                            # expected_bytes = np.prod(expected_shape) * 4
+                            # system_logger.info(f"[DEBUG] expected_shape: {expected_shape}, expected_bytes: {expected_bytes}")
+                            # system_logger.info(f"[DEBUG] actual_shape: {input_mel.shape}, actual_bytes: {input_mel.nbytes}")
+                            # assert input_mel.nbytes == expected_bytes, "Buffer size mismatch!"
+
+                            # print("[DEBUG] input_mel shape:", input_mel.shape)
+                            # print("[DEBUG] expected_shape:", expected_shape)
+                            # assert input_mel.shape == expected_shape, f"Shape mismatch: got {input_mel.shape}, expected {expected_shape}"
+                            # assert input_mel.dtype == np.float32, f"Wrong dtype: got {input_mel.dtype}"
+                            # assert input_mel.shape == expected_shape
+                            # break``
+                            # buffer = np.zeros(encoder_infer_model.output().shape).astype(np.float32)
+                            # encoder_bindings.output().set_buffer(buffer)
+
+                            # encoder_configured_infer_model.run([encoder_bindings], self.timeout_ms)
+                            # encoded_features = encoder_bindings.output().get_buffer()
+
+
+
+
+                            # Original code
+                            # input_mel = np.ascontiguousarray(input_mel)
                             encoder_bindings.input().set_buffer(input_mel)
                             buffer = np.zeros(encoder_infer_model.output().shape).astype(np.float32)
                             encoder_bindings.output().set_buffer(buffer)
 
+                            buf = encoder_bindings.input().get_buffer()
+                            system_logger.info(f"Pre-run buffer: shape={buf.shape}, dtype={buf.dtype}, contig={buf.flags['C_CONTIGUOUS']}")
+                            system_logger.info(f"INPUT buffer: shape={input_mel.shape}, dtype={input_mel.dtype}, contiguous={input_mel.flags['C_CONTIGUOUS']}")
                             encoder_configured_infer_model.run([encoder_bindings], self.timeout_ms)
                             encoded_features = encoder_bindings.output().get_buffer()
-
                             # Decoder
                             start_token_id = [50258]
                             decoder_input_ids = np.array(

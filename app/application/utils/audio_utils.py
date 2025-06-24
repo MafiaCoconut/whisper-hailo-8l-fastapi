@@ -110,8 +110,11 @@ class AudioUtils:
         """
         assert n_mels in {80, 128}, f"Unsupported n_mels: {n_mels}"
 
-        system_logger.info(f"filters_path: {os.path.dirname(__file__)}")
-        filters_path = os.path.join(os.path.dirname(__file__), "assets", "mel_filters.npz")
+        base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir))
+
+        filters_path = os.path.join(base_path, "infrastructure", "assets", "mel_filters.npz")
+        system_logger.info(f"filters_path: {filters_path}")
+
         with np.load(filters_path, allow_pickle=False) as f:
             return torch.from_numpy(f[f"mel_{n_mels}"]).to(device)
 

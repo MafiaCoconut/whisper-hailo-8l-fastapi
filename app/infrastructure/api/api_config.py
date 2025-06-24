@@ -1,12 +1,13 @@
 from fastapi import FastAPI
 
 from infrastructure.api import cors
-from infrastructure.api.endpoints import default_api
+from infrastructure.api.endpoints import default_api, whisper_api
 from infrastructure.api.responces.exceptions import rewrite_http_exception_response
 
 
 def configure_endpoints(app: FastAPI):
     default_api.config(app=app)
+    whisper_api.config(app=app)
     # users_api.config(app=app)
     # auth_api.config(app=app)
 

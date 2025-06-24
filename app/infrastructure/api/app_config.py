@@ -19,11 +19,13 @@ async def lifespan(app: FastAPI):
     # await scheduler_service.set_all_jobs()
 
     # logs_config.config()
+    system_logger.info("API configuration is started")
     api_config.config(app=app)
-    whisper_hailo.config()
+    # whisper_hailo.config()
 
     # await telegram_config.config()
     # ic(await scheduler_service.get_all_jobs())
+    system_logger.info("Program is started")
     yield
     system_logger.info("Program is stopping")
     whisper_hailo.whisper_hailo_stop()

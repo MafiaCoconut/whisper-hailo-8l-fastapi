@@ -196,3 +196,5 @@ cython_debug/
 app/infrastructure/hefs/*
 app/infrastructure/decoder_assets/*
 .python-version
+
+*.whl
