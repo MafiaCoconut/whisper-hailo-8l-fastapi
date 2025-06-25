@@ -10,38 +10,20 @@ PIP_BIN = os.path.join(VENV_DIR, "bin", "pip")
 APP_DIR = os.path.join(ROOT_DIR, "app")
 
 def run_command(command, cwd=None):
-    print(f"swd: {ROOT_DIR}")
-    print(f'cwd: {cwd}')
     """Helper function to run shell commands."""
     subprocess.run(command, shell=True, cwd=cwd, check=True)
-
-def is_raspberry_pi_5():
-    """Checks if the host platform is a Raspberry Pi 5."""
-    try:
-        with open("/proc/device-tree/model", "r") as f:
-            model = f.read().strip().lower()
-        return ("raspberry pi 5" in model)
-    except FileNotFoundError:
-        return False
 
 def create_venv():
     """Creates a virtual environment if it doesn't exist."""
     if not os.path.exists(VENV_DIR):
         print(f"Creating virtual environment in {VENV_DIR}...")
         run_command(f"poetry install")
-
-        # if is_raspberry_pi_5():  # Raspberry Pi 5 with hailo-all package installed. Reuse existing packages.
-        #     # run_command(f"python3 -m venv --system-site-packages {VENV_DIR}")
-        #     run_command(f"poetry install")
-
-        # else:  # x86 and other cases
-        #     run_command(f"python3 -m venv {VENV_DIR}")
     else:
         print("Virtual environment already exists.")
 
     # Upgrade pip to the latest version
     print("\nUpgrading pip inside the virtual environment...")
-    run_command(f"poetry run {PIP_BIN} install --upgrade pip")
+    run_command(f"poetry run {PIP_BIN} install --upgrade pip wheel setuptools")
 
 def download_resources():
     try:

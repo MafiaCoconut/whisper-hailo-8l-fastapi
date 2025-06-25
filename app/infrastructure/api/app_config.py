@@ -3,6 +3,8 @@ from contextlib import asynccontextmanager
 import logging
 from infrastructure.api import api_config, cors
 from infrastructure.config import whisper_hailo
+import os
+
 app = FastAPI()
 
 cors.config(app=app)

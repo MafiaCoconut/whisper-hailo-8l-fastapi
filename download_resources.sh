@@ -8,7 +8,7 @@ if [ -d "hefs" ]; then
   rm -rf app/infrastructure/hefs
 fi
 
-echo "Creating new 'hefs/h8/tiny' directory..."
+#echo "Creating new 'hefs/h8/tiny' directory..."
 mkdir -p app/infrastructure/hefs/h8/tiny
 
 # Download the files using wget
@@ -19,7 +19,7 @@ echo "Downloading tiny-whisper-encoder for Hailo-8..."
 wget -P app/infrastructure/hefs/h8/tiny "https://hailo-csdata.s3.eu-west-2.amazonaws.com/resources/hefs/h8/tiny-whisper-encoder-10s_15dB.hef"
 
 
-echo "Creating new 'hefs/h8/tiny' directory..."
+#echo "Creating new 'hefs/h8/tiny' directory..."
 mkdir -p app/infrastructure/hefs/h8l/tiny
 echo "Downloading tiny-whisper-decoder for Hailo-8L..."
 wget -P app/infrastructure/hefs/h8l/tiny "https://hailo-csdata.s3.eu-west-2.amazonaws.com/resources/hefs/h8l_rpi/tiny-whisper-decoder-fixed-sequence-matmul-split_h8l.hef"

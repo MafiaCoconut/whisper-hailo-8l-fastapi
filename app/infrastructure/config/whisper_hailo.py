@@ -2,7 +2,6 @@ from application.pipelines.hailo_whisper_pipeline import HailoWhisperPipeline
 from infrastructure.config.utils_config import hef_utils, args_utils
 
 # whisper_hailo = None
-variant = "hailo8l"
 # encoder_path = hef_utils.get_encoder_hef_path(variant)
 # decoder_path = hef_utils.get_decoder_hef_path(variant)
 
@@ -16,12 +15,9 @@ whisper_hailo: HailoWhisperPipeline | None = None
 #     variant='tiny',
 #     multi_process_service=False)
 
-def config():
-    # args = args_utils.get_args()
-    variant = "hailo8l"
+def config(variant: str = "hailo8l") -> None:
     encoder_path = hef_utils.get_encoder_hef_path(variant)
     decoder_path = hef_utils.get_decoder_hef_path(variant)
-
 
     global whisper_hailo
     whisper_hailo = HailoWhisperPipeline(

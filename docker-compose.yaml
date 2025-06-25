@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  whisper-hailo:
+    image: whisper-hailo-image:latest
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      IS_HAILO_ON_DEVICE: TRUE
+      HAILO_VERSION: HAILO_8L         # HAILO_8 or HAILO_8L
+    command:
+      - "poetry"
+      - "run"
+      - "uvicorn"
+      - "main:app"
+      - "--port"
+      - "10300"
+      - "--host"
+      - "0.0.0.0"
+      - "--log-config"
+      - "infrastructure/config/logging_config.json"
