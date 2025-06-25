@@ -8,8 +8,6 @@ from infrastructure.api.responces.exceptions import rewrite_http_exception_respo
 def configure_endpoints(app: FastAPI):
     default_api.config(app=app)
     whisper_api.config(app=app)
-    # users_api.config(app=app)
-    # auth_api.config(app=app)
 
 
 def config_exceptions(app: FastAPI):
@@ -19,6 +17,5 @@ def config_cors(app: FastAPI):
     cors.config(app=app)
 
 def config(app: FastAPI):
-    # config_cors(app=app)
     config_exceptions(app=app)
     configure_endpoints(app=app)
