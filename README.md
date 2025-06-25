@@ -13,6 +13,7 @@ It was created and tested on:
 - HailoRT PCIe driver
 - PyHailoRT (.whl file; Can be downloaded https://hailo.ai/developer-zone/software-downloads; You need file HailoRT – Python package (whl) for Python 3.11, aarch64)
 - Python 3.11.*
+- Poetry 
 
 ### Pre-Installation
 IMPORTANT STEP
