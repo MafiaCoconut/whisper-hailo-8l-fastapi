@@ -7,12 +7,12 @@ class WhisperService:
     def __init__(
             self,
             audio_utils: AudioUtils,
-            whisper_hailo: HailoWhisperPipeline,
+            # whisper_hailo: HailoWhisperPipeline,
     ):
         self.transcribe_audio_use_case = TranscribeAudioUseCase(
             audio_utils=audio_utils,
-            whisper_hailo=whisper_hailo
+            # whisper_hailo=whisper_hailo
         )
 
-    async def transcribe_audio(self, audio_file_path: str):
-        return await self.transcribe_audio_use_case.execute(audio_path=audio_file_path)
+    async def transcribe_audio(self, whisper_hailo, audio_file_path: str):
+        return await self.transcribe_audio_use_case.execute(whisper_hailo, audio_path=audio_file_path)

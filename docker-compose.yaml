@@ -8,8 +8,17 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      IS_HAILO_ON_DEVICE: TRUE
-      HAILO_VERSION: HAILO_8L         # HAILO_8 or HAILO_8L
+      IS_HAILO_ON_DEVICE: "TRUE"
+      HAILO_VERSION: "HAILO8L"         # HAILO_8 or HAILO_8L
+    ports:
+      - "10300:10300"
+    volumes:
+      - /dev:/dev
+      - /lib/firmware:/lib/firmware
+      - /lib/udev/rules.d:/lib/udev/rules.d
+      - /lib/modules:/lib/modules 
+    devices:
+      - /dev/hailo0:/dev/hailo0
     command:
       - "poetry"
       - "run"

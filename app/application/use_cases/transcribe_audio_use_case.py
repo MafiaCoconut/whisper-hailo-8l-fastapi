@@ -13,16 +13,17 @@ class TranscribeAudioUseCase:
     def __init__(
             self,
             audio_utils: AudioUtils,
-            whisper_hailo: HailoWhisperPipeline
+            # whisper_hailo: HailoWhisperPipeline
     ):
         self.audio_utils = audio_utils
         self.is_nhwc = True
         self.variant = "tiny"
         self.chunk_length = 10 if self.variant == "tiny" else 5
-        self.whisper_hailo = whisper_hailo
+        # self.whisper_hailo = whisper_hailo
 
 
-    async def execute(self, audio_path: str) -> str:
+    async def execute(self, whisper_hailo, audio_path: str) -> str:
+        print(f"IS_HAILO_ON_DEVICE: {os.getenv('IS_HAILO_ON_DEVICE')}")
         if os.getenv("IS_HAILO_ON_DEVICE") == 'TRUE':
             sampled_audio = self.audio_utils.load_audio(audio_path)
 
@@ -40,9 +41,9 @@ class TranscribeAudioUseCase:
 
             result = ""
             for mel in mel_spectrograms:
-                self.whisper_hailo.send_data(mel)
+                whisper_hailo.send_data(mel)
                 time.sleep(0.2)
-                result += clean_transcription(self.whisper_hailo.get_transcription())
+                result += clean_transcription(whisper_hailo.get_transcription())
                 break
 
             return result
