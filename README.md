@@ -28,7 +28,7 @@ https://hailo.ai/developer-zone/documentation/hailort-v4-21-0/?sp_referrer=insta
 1. Clone repository
     ```shell
     git clone https://github.com/MafiaCoconut/whisper-hailo-8l-fastapi.git
-    cd whisper-hailo-8l-fastapi.git
+    cd whisper-hailo-8l-fastapi
     ```
 
 2. Run the setup script
@@ -68,7 +68,7 @@ Using docker-compose instead of Docker will make it much easier to launch the se
     HAILO_VERSION="HAILO8L" # This value can be only "HAILO8L" or "HAILO8"
     ```
 
-2. In file hailo_whisper_pipeline you need to comment out `line 11`
+2. In file app/application/pipelines/hailo_whisper_pipeline you need to comment out `line 11`
     ```
     from hailo_platform import (HEF, VDevice, HailoSchedulingAlgorithm, FormatType)
     ```

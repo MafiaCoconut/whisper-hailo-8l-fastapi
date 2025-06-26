@@ -21,11 +21,9 @@ async def lifespan(app: FastAPI):
     api_config.config(app=app)
     whisper_hailo.config(app=app, _model=os.getenv("HAILO_VERSION"))
 
-    print('os.getenv("HAILO_VERSION"): ', os.getenv("HAILO_VERSION"))
-    # match os.getenv("HAILO_VERSION"):
-    #     case "HAILO-8":
-    #     case "HAILO-8L":
-    #         whisper_hailo.config(app=app, _model="hailo8l")
+    system_logger.info(f"HAILO_VERSION: {os.getenv('HAILO_VERSION')}")
+    system_logger.info(f"IS_HAILO_ON_DEVICE: {os.getenv('IS_HAILO_ON_DEVICE')}")
+
 
     system_logger.info("Program is started")
     yield
