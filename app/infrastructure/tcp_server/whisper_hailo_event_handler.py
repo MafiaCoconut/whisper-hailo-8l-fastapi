@@ -13,6 +13,9 @@ from wyoming.event import Event
 from wyoming.info import Describe, Info
 from wyoming.server import AsyncEventHandler
 
+from infrastructure.config.services_config import get_whisper_service
+from infrastructure.config.whisper_hailo import get_whisper_hailo
+
 system_logger = logging.getLogger(__name__)
 
 
@@ -31,6 +34,8 @@ class WhisperHailoEventHandler(AsyncEventHandler):
         self._wav_dir = tempfile.TemporaryDirectory()
         self._wav_path = os.path.join(self._wav_dir.name, "speech.wav")
         self._wav_file: Optional[wave.Wave_write] = None
+
+        self.whisper_service = get_whisper_service()
 
     async def handle_event(self, event: Event) -> bool:
         if AudioChunk.is_type(event.type):
@@ -51,6 +56,19 @@ class WhisperHailoEventHandler(AsyncEventHandler):
 
             self._wav_file.close()
             self._wav_file = None
+
+            whisper_hailo = get_whisper_hailo()
+
+            try:
+                result = await self.whisper_service.transcribe_audio(whisper_hailo, audio_file_path=self._wav_path)
+            except Exception as e:
+                system_logger.error(f"Error during transcription: {e}")
+                return False
+            finally:
+                whisper_hailo.stop()
+
+            await self.write_event(Transcript(text=result).event())
+            system_logger.error(f"Successful transcription: {result}")
 
             # async with self.model_lock:
             #     segments, _info = self.model.transcribe(

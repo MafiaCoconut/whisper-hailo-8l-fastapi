@@ -39,8 +39,7 @@ async def transcribe_audio(
             return {"error": "An error occurred during transcription."}
         finally:
             whisper_hailo.stop()
-        
-        return {"message": result}
+            return {"message": result}
     else:
         return {"message": "Server in debug mode"}
 
