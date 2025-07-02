@@ -68,31 +68,13 @@ class WhisperHailoEventHandler(AsyncEventHandler):
                 whisper_hailo.stop()
 
             await self.write_event(Transcript(text=result).event())
-            system_logger.error(f"Successful transcription: {result}")
-
-            # async with self.model_lock:
-            #     segments, _info = self.model.transcribe(
-            #         self._wav_path,
-            #         beam_size=self.cli_args.beam_size,
-            #         language=self._language,
-            #         initial_prompt=self.initial_prompt,
-            #     )
-
-            # text = " ".join(segment.text for segment in segments)
-            # _LOGGER.info(text)
-
-            # await self.write_event(Transcript(text=text).event())
-            # _LOGGER.debug("Completed request")
-            #
-            # # Reset
-            # self._language = self.cli_args.language
+            system_logger.info(f"Successful transcription: {result}")
 
             return False
-
+        
         if Transcribe.is_type(event.type):
             transcribe = Transcribe.from_event(event)
             if transcribe.language:
-                # self._language = transcribe.language
                 system_logger.debug("Language set to %s", transcribe.language)
             return True
 

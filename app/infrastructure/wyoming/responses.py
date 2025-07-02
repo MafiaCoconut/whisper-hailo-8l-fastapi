@@ -3,8 +3,8 @@ from wyoming.info import AsrModel, AsrProgram, Attribution, Info
 wyoming_info = Info(
     asr=[
         AsrProgram(
-            name="whisper-hailo-8l-fastapi",
-            description="Whisper with Hailo-8(L) support on FastAPI Server",
+            name="whisper-hailo-8",
+            description="Whisper with Hailo-8(L) and support of FastAPI",
             attribution=Attribution(
                 name="MafiaCoconut",
                 url="https://github.com/MafiaCoconut/whisper-hailo-8l-fastapi/",
