@@ -8,7 +8,7 @@ from threading import Thread
 from infrastructure.common_functions.postprocessing import apply_repetition_penalty
 
 # For debugging not in machine without Hailo8 / Hailo8L you need to comment out next line
-# from hailo_platform import (HEF, VDevice, HailoSchedulingAlgorithm, FormatType)
+from hailo_platform import (HEF, VDevice, HailoSchedulingAlgorithm, FormatType)
 if os.getenv("IS_HAILO_ON_DEVICE") == "FALSE":
     HEF = None
     VDevice = None
