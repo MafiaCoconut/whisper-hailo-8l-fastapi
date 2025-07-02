@@ -1,0 +1,27 @@
+{
+  "type": "info",
+  "data": {
+    "asr": [
+      {
+        "models": [
+          {
+            "name": "whisper",
+            "languages": ["en"],
+            "attribution": {
+              "name": "MafiaCoconut",
+              "url": "https://github.com/MafiaCoconut/whisper-hailo-8l-fastapi"
+            },
+            "installed": true,
+            "description": "Whisper Hailo-8(L) model",
+            "version": "1.0"
+          }
+        ],
+        "supports_transcript_streaming": false
+      }
+    ],
+    "tts": [],
+    "wake": [],
+    "handle": [],
+    "intent": []
+  }
+}

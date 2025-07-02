@@ -6,4 +6,4 @@ DOTENV := .env
 .PHONY: run
 
 run:
-	cd app && poetry run uvicorn main:app --port 10300 --host 0.0.0.0 --log-config infrastructure/config/logging_config.json
+	cd app && poetry run uvicorn main:app --port 54321 --host 0.0.0.0 --log-config infrastructure/config/logging_config.json

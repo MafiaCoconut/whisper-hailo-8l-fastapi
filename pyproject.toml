@@ -20,6 +20,8 @@ colorlog = "^6.9.0"
 coloredlogs = "^15.0.1"
 python-dotenv = "^1.1.0"
 python-multipart = "^0.0.20"
+asyncio = "^3.4.3"
+wyoming = "^1.7.1"
 
 
 [build-system]
