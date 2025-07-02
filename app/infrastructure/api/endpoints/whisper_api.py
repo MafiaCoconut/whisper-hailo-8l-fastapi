@@ -23,21 +23,25 @@ async def transcribe_audio(
         request: Request,
         file: UploadFile = File(...),
         whisper_service: WhisperService = Depends(get_whisper_service)):
-    suffix = os.path.splitext(file.filename)[1]
-    with NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
-        content = await file.read()
-        tmp.write(content)
-        tmp_path = tmp.name
-    whisper_hailo = get_whisper_hailo()
-    try:
-        result = await whisper_service.transcribe_audio(whisper_hailo, audio_file_path=tmp_path)
-    except Exception as e:
-        system_logger.error(f"Error during transcription: {e}")
-        response.status_code = 500
-        return {"error": "An error occurred during transcription."}
-    finally:
-        whisper_hailo.stop()
+
+    if os.getenv("IS_HAILO_ON_DEVICE") == "TRUE":
+        suffix = os.path.splitext(file.filename)[1]
+        with NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
+            content = await file.read()
+            tmp.write(content)
+            tmp_path = tmp.name
+        whisper_hailo = get_whisper_hailo()
+        try:
+            result = await whisper_service.transcribe_audio(whisper_hailo, audio_file_path=tmp_path)
+        except Exception as e:
+            system_logger.error(f"Error during transcription: {e}")
+            response.status_code = 500
+            return {"error": "An error occurred during transcription."}
+        finally:
+            whisper_hailo.stop()
         
-    return {"message": result}
+        return {"message": result}
+    else:
+        return {"message": "Server in debug mode"}
 
 

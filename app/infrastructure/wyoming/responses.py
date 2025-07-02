@@ -10,7 +10,7 @@ wyoming_info = Info(
                 url="https://github.com/MafiaCoconut/whisper-hailo-8l-fastapi/",
             ),
             installed=True,
-            version=__version__,
+            version="0.0.1",
             models=[
                 AsrModel(
                     name="whisper-hailo",
@@ -21,7 +21,7 @@ wyoming_info = Info(
                     ),
                     installed=True,
                     languages=["en"],
-                    version="1.0",
+                    version="4.2.1",
                 )
             ],
         )
