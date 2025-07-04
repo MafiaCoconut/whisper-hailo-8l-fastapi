@@ -23,20 +23,16 @@ async def lifespan(app: FastAPI):
 
     system_logger.info("API configuration is started")
     api_config.config(app=app)
-    whisper_hailo.config(app=app, _model=os.getenv("HAILO_VERSION"))
+    if os.getenv("IS_HAILO_ON_DEVICE") == "TRUE":
+        system_logger.info(f"Service is running on device with Hailo-8. HAILO_VERSION: {os.getenv('HAILO_VERSION')}")
+        whisper_hailo.config(app=app, _model=os.getenv("HAILO_VERSION"))
 
-    system_logger.info(f"HAILO_VERSION: {os.getenv('HAILO_VERSION')}")
-    system_logger.info(f"IS_HAILO_ON_DEVICE: {os.getenv('IS_HAILO_ON_DEVICE')}")
-
-    # system_logger.info("Starting Whyoming TCP server")
-    # system_logger.info(f"response exist: {os.path.isfile('common/wyoming_describe_response.json')}")
-    # asyncio.create_task(start_tcp_server())
+    system_logger.info("Starting Wyoming TCP server")
+    asyncio.create_task(start_tcp_server())
 
     system_logger.info("Program is started")
     yield
     system_logger.info("Program is stopping")
-    # if os.getenv("IS_HAILO_ON_DEVICE") == "TRUE":
-    #     whisper_hailo.whisper_hailo_stop()
     system_logger.info("Program is stopped")
 
 

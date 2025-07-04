@@ -11,7 +11,8 @@ services:
       IS_HAILO_ON_DEVICE: "TRUE"
       HAILO_VERSION: "HAILO8L"         # HAILO8 or HAILO8L
     ports:
-      - "10300:10300"
+      - "10300:10300"                  # TCP  port for Wyoming Protocol
+      - "54322:54322"                  # HTTP port for FastAPI
     volumes:
       - /dev:/dev
       - /lib/firmware:/lib/firmware
@@ -25,7 +26,7 @@ services:
       - "uvicorn"
       - "main:app"
       - "--port"
-      - "10300"
+      - "54322"
       - "--host"
       - "0.0.0.0"
       - "--log-config"
