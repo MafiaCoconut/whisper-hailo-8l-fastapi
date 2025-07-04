@@ -15,6 +15,15 @@ It was created and tested on:
 - Python 3.11.*
 - Poetry 
 
+
+### INFO
+It is a standalone service that uses the Hailo-8(L) chip to speed up voice recognition.
+
+It can accept API and TCP requests.
+
+It works correctly with the wyoming protocol for Homeassistant integration
+
+
 ### Pre-Installation
 IMPORTANT STEP
 
@@ -59,12 +68,10 @@ Using docker-compose instead of Docker will make it much easier to launch the se
     docker-compose up --build
     ```
 
-
-
 #### Local
 1. Change .env file
     ```
-    IS_HAILO_ON_DEVICE="TRUE" # if you want to run service not it RP5, you need to change this value on "FALSE"
+    IS_HAILO_ON_DEVICE="TRUE" # if you want to run service NOT it RP5, you need to change this value on "FALSE"
     HAILO_VERSION="HAILO8L" # This value can be only "HAILO8L" or "HAILO8"
     ```
 
@@ -78,17 +85,28 @@ Using docker-compose instead of Docker will make it much easier to launch the se
     make run
     ```
 
+### Requests
+
+#### TCP (Homeassistant)
+Wyoming protocol is using TCP connection with port `10300`
+
+#### API
+For standard requests of your services you can use port `54322` with route `/transcribe`
+
+You can change port by changing it in `docker-compose.yaml` or `Makefile` in local
+
+
 
 ### EXTRA
 
 If you need another .deb and .whl files, you can add them in hailort_requirements_files folder and change pathes
 
-Here is also simple example of how to send voice_files to this service
+Here is also a simple example of how to send voice_files to this service
     
 ```py
 import requests
 
-url = "http://<device-host>:10300/transcribe"
+url = "http://<device-host>:54322/transcribe"
 files = {'file': open('male.wav', 'rb')}
 resp = requests.post(url, files=files)
 print(resp.json())
